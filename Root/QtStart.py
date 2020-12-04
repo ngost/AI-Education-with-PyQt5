@@ -48,7 +48,7 @@ class AppForm(QtWidgets.QMainWindow):
         self.resize(int(sc_width/2) ,int(sc_height/2))
 
         self.menubar_init()
-
+#테슷
         # set main btn
         self.vision_btn = QtWidgets.QPushButton('비전', self)
         self.qt_practice_btn = QtWidgets.QPushButton('QT 예제', self)
