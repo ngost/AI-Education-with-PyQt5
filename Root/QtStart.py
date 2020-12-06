@@ -3,11 +3,12 @@ import sys, os
 import wx
 from PyQt5 import QtWidgets
 # from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QAction, qApp, QMainWindow
-from PyQt5.QtGui import QIcon,QPixmap
+from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt,QSize
 
 
 # App 관련 Class 생성
-class AppForm(QtWidgets.QMainWindow):
+class AppForm(QtWidgets.QWidget):
     # 기본 스크린 사이즈
     sc_width = 1920
     sc_height = 1080
@@ -19,19 +20,19 @@ class AppForm(QtWidgets.QMainWindow):
         self.init_ui()
     # UI 초기화 함수 (기본 UI 설정)
 
-    def menubar_init(self):
-        exitAction = QtWidgets.QAction(QIcon('exit.png'), 'Exit', self)
-        exitAction.setShortcut('Ctrl+E')
-        exitAction.setStatusTip('Exit application')
-        exitAction.triggered.connect(QtWidgets.qApp.quit)
-
-        # self.statusBar()
-        self.toolbar = self.addToolBar('Exit')
-        self.toolbar.addAction(exitAction)
-        self.toolbar.addAction(exitAction)
-        self.toolbar.addAction(exitAction)
-
-        # self.setGeometry(300, 300, 300, 200)
+    # def menubar_init(self):
+    #     exitAction = QtWidgets.QAction(QIcon('exit.png'), 'Exit', self)
+    #     exitAction.setShortcut('Ctrl+E')
+    #     exitAction.setStatusTip('Exit application')
+    #     exitAction.triggered.connect(QtWidgets.qApp.quit)
+    #
+    #     # self.statusBar()
+    #     self.toolbar = self.addToolBar('Exit')
+    #     self.toolbar.addAction(exitAction)
+    #     self.toolbar.addAction(exitAction)
+    #     self.toolbar.addAction(exitAction)
+    #
+    #     # self.setGeometry(300, 300, 300, 200)
 
     def init_ui(self):
         #set title
@@ -47,24 +48,63 @@ class AppForm(QtWidgets.QMainWindow):
         # set Defalut Screen Size - 2. resize app screen size of your desktop screen size (About 1/4 size)
         self.resize(int(sc_width/2) ,int(sc_height/2))
 
-        self.menubar_init()
-#테슷
+        # set background img
+        #self.setStyleSheet('background-image: url(exit.png)')
+
+        background = QImage('./imgs/ui/background_star.jpeg')
+        # background.scaled(QSize(500,500))
+        palette = QPalette()
+        palette.setBrush(10,QBrush(background))
+        self.setPalette(palette)
+
         # set main btn
         self.vision_btn = QtWidgets.QPushButton('비전', self)
         self.qt_practice_btn = QtWidgets.QPushButton('QT 예제', self)
-        self.vision_btn.move(sc_width/4,sc_height/4 - 50)
-        self.qt_practice_btn.move(sc_width/4,sc_height/4 + 50)
 
+        # set btn font
+        self.vision_btn.setFont(QFont('Arial',20))
+        self.qt_practice_btn.setFont(QFont('Arial',20))
+
+        # set widget connect with signal
         self.vision_btn.clicked.connect(self.vision_btn_function)
         self.qt_practice_btn.clicked.connect(self.qt_practice_btn_function)
 
+        #set text
+
+
+        title_text = QtWidgets.QLabel('Vision Project with PyQt5')
+        title_text.setFont(QFont('Arial',35))
+        title_text.setAlignment(Qt.AlignCenter)
+
+        # set grid layout
+        grid = QtWidgets.QGridLayout()
+
+
+        self.setLayout(grid)
+        grid.cellRect(3,5)
+        grid.setColumnStretch(0,1)
+        grid.setColumnStretch(1,1)
+        grid.setColumnStretch(2,1)
+
+        grid.setRowStretch(0,1)
+        grid.setRowStretch(1,1)
+        grid.setRowStretch(2,1)
+        grid.setRowStretch(3,1)
+
+        grid.addWidget(title_text,0,1)
+
+        grid.addWidget(self.vision_btn,1,1)
+        grid.addWidget(self.qt_practice_btn,2,1)
+
     def vision_btn_function(self):
-        print('vision page')
+        print('qt_practice_btn_function page')
+        reply = QtWidgets.QMessageBox.question(self, 'Message', '준비중입니다 : (',
+                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
 
     def qt_practice_btn_function(self):
         print('qt_practice_btn_function page')
-        reply = QtWidgets.QMessageBox.question(self, 'Message', 'Are you sure to quit?',
+        reply = QtWidgets.QMessageBox.question(self, 'Message', '준비중입니다 : (',
                                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
 # python main code(실제 실행되는 스크립트)
