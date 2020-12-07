@@ -10,4 +10,4 @@ This project is ai projects for education. Programmed based pyQt5 frameworks.
 - pyqt5 (5.12.0
 - tensorflow
 - numpy
-- google transform
+- googletrans
