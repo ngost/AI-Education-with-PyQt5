@@ -1,6 +1,6 @@
 # AI-Education-with-PyQt5
 
-@ Introduce
+# Introduce
 
 This project is ai projects for education. Programmed based pyQt5 frameworks.
 
