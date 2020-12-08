@@ -68,10 +68,23 @@ class AppForm(QtWidgets.QWidget):
         # set btn font
         self.vision_btn.setFont(QFont('Arial',20))
         self.qt_practice_btn.setFont(QFont('Arial',20))
+        self.vision_btn.setMaximumHeight(80)
+        self.qt_practice_btn.setMaximumHeight(80)
 
         # set widget connect with signal
         self.vision_btn.clicked.connect(self.vision_btn_function)
         self.qt_practice_btn.clicked.connect(self.qt_practice_btn_function)
+        self.vision_btn.setStyleSheet('QPushButton::hover'
+                                      '{'
+                                      'background-color : #64b5f6'
+                                      '}'
+                                      )
+
+        self.qt_practice_btn.setStyleSheet('QPushButton::hover'
+                                      '{'
+                                      'background-color : #64b5f6'
+                                      '}'
+                                      )
 
         #set text
 
@@ -86,7 +99,7 @@ class AppForm(QtWidgets.QWidget):
 
 
         self.setLayout(grid)
-        grid.cellRect(3,5)
+        grid.cellRect(5,5)
         grid.setColumnStretch(0,1)
         grid.setColumnStretch(1,1)
         grid.setColumnStretch(2,1)
