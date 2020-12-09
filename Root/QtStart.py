@@ -4,19 +4,30 @@ import wx
 import PyQt5
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt,QUrl
+from PyQt5.QtCore import Qt,QUrl,QEvent
 from PyQt5.QtMultimedia import QMediaContent
+
+from PyQt5.QtMultimedia import QSound
+from playsound import playsound
+import multiprocessing
 # App 관련 Class 생성
 class AppForm(QtWidgets.QWidget):
     # 기본 스크린 사이즈
     sc_width = 1920
     sc_height = 1080
+    m_process = multiprocessing.Process(target=playsound, args=['musics/space.mp3'])
 
+    def playBackgroundSound(self):
+        AppForm.m_process.start()
+
+    def stopBackgroundSound(self):
+        AppForm.m_process.terminate()
 
     # 클래스 중 가장 먼저 실행되는 함수
     def __init__(self):
         super().__init__()
         self.init_ui()
+
     # UI 초기화 함수 (기본 UI 설정)
 
     # def menubar_init(self):
@@ -37,6 +48,7 @@ class AppForm(QtWidgets.QWidget):
 
     def init_ui(self):
         #set title
+
         self.setWindowTitle("Ai Application Demo with pyQt5")
 
         if os.name == 'nt':
@@ -61,6 +73,12 @@ class AppForm(QtWidgets.QWidget):
         # self.setAutoFillBackground(True)
         # self.setPalette(palette)
 
+        # Quit action
+
+        quit = QtWidgets.QAction("Quit", self)
+
+        quit.triggered.connect(self.close)
+
         # set main btn
         self.vision_btn = QtWidgets.QPushButton('비전', self)
         self.qt_practice_btn = QtWidgets.QPushButton('QT 예제', self)
@@ -68,12 +86,17 @@ class AppForm(QtWidgets.QWidget):
         # set btn font
         self.vision_btn.setFont(QFont('Arial',20))
         self.qt_practice_btn.setFont(QFont('Arial',20))
+
         self.vision_btn.setMaximumHeight(80)
         self.qt_practice_btn.setMaximumHeight(80)
 
         # set widget connect with signal
         self.vision_btn.clicked.connect(self.vision_btn_function)
         self.qt_practice_btn.clicked.connect(self.qt_practice_btn_function)
+
+        self.vision_btn.installEventFilter(self)
+        self.qt_practice_btn.installEventFilter(self)
+
         self.vision_btn.setStyleSheet('QPushButton::hover'
                                       '{'
                                       'background-color : #64b5f6'
@@ -129,8 +152,24 @@ class AppForm(QtWidgets.QWidget):
         painter = QPainter(self)
         painter.drawRect(self.rect())
         pix = QPixmap("./imgs/ui/background-img.png")  # Change to the relative path of your own image
-
         painter.drawPixmap(self.rect(), pix)
+
+    def closeEvent(self, a0: QCloseEvent):
+        self.stopBackgroundSound()
+
+    def eventFilter(self, obj, event):
+
+        if obj == self.qt_practice_btn and event.type() == QEvent.HoverEnter:
+            self.onHovered()
+        elif obj == self.vision_btn and event.type() == QEvent.HoverEnter:
+            self.onHovered()
+
+        return super(AppForm, self).eventFilter(obj, event)
+
+    def onHovered(self):
+        QSound.play('musics/button_hover.wav')
+#        playsound('musics/button_hover.wav')
+
 
 # def testFunction():
 #     print("test!")
@@ -148,15 +187,6 @@ class AppForm(QtWidgets.QWidget):
 #     player.play()
 #     print("play!")
 
-def playBackgroundSound():
-    from playsound import playsound
-    import multiprocessing
-
-
-    p = multiprocessing.Process(target= playsound, args= ['Root/bgm.mp3'])
-    # playsound('Root/bgm.mp3',False)
-    p.start()
-    # p.terminate()
 
 # python main code(실행 메인 스크립트)
 if __name__ == '__main__':
@@ -185,8 +215,8 @@ if __name__ == '__main__':
     form = AppForm()
     form.paintEngine()
     form.show()
-    playBackgroundSound()
 
+    form.playBackgroundSound()
     # App 호출, pyqt4와의 호환성을 위해 sys.exit(app.exec_())로 쓰기도
 
     sys.exit(app.exec_())
