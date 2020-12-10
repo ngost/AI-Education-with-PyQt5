@@ -1,11 +1,9 @@
-# 모듈 임포트 sys, PyQt5의 QApplication과 QWidget 모듈, wxPython
 import sys, os
 import wx
 import PyQt5
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt,QUrl,QEvent
-from PyQt5.QtMultimedia import QMediaContent
+from PyQt5.QtCore import Qt,QEvent
 
 from PyQt5.QtMultimedia import QSound
 from playsound import playsound
@@ -30,22 +28,6 @@ class AppForm(QtWidgets.QWidget):
 
     # UI 초기화 함수 (기본 UI 설정)
 
-    # def menubar_init(self):
-    #     exitAction = QtWidgets.QAction(QIcon('exit.png'), 'Exit', self)
-    #     exitAction.setShortcut('Ctrl+E')
-    #     exitAction.setStatusTip('Exit application')
-    #     exitAction.triggered.connect(QtWidgets.qApp.quit)
-    #
-    #     # self.statusBar()
-    #     self.toolbar = self.addToolBar('Exit')
-    #     self.toolbar.addAction(exitAction)
-    #     self.toolbar.addAction(exitAction)
-    #     self.toolbar.addAction(exitAction)
-    #
-    #     # self.setGeometry(300, 300, 300, 200)
-
-
-
     def init_ui(self):
         #set title
 
@@ -60,18 +42,6 @@ class AppForm(QtWidgets.QWidget):
         sc_width, sc_height = wx.GetDisplaySize()
         # set Defalut Screen Size - 2. resize app screen size of your desktop screen size (About 1/4 size)
         self.resize(int(sc_width/2) ,int(sc_height/2))
-
-        # set background img
-        #self.setStyleSheet('background-image: url(exit.png)')
-
-        # background = QImage('./imgs/ui/background_star.jpeg')
-        #
-        # background.scaled(QSize(64,64))
-        # palette = QPalette()
-        #
-        # palette.setBrush(10,QBrush(background))
-        # self.setAutoFillBackground(True)
-        # self.setPalette(palette)
 
         # Quit action
 
@@ -117,6 +87,10 @@ class AppForm(QtWidgets.QWidget):
         title_text.setFont(QFont('Arial',35))
         title_text.setAlignment(Qt.AlignCenter)
 
+        copyright_text = QtWidgets.QLabel('Copylight : easyJin')
+        copyright_text.setStyleSheet('color : white')
+        copyright_text.setAlignment(Qt.AlignCenter)
+
         # set grid layout
         grid = QtWidgets.QGridLayout()
 
@@ -133,6 +107,7 @@ class AppForm(QtWidgets.QWidget):
         grid.setRowStretch(3,1)
 
         grid.addWidget(title_text,0,1)
+        grid.addWidget(copyright_text,5,1)
 
         grid.addWidget(self.vision_btn,1,1)
         grid.addWidget(self.qt_practice_btn,2,1)
@@ -148,12 +123,16 @@ class AppForm(QtWidgets.QWidget):
         reply = QtWidgets.QMessageBox.question(self, 'Message', '준비중입니다 : (',
                                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
+    # set background img
+
     def paintEvent(self, a0: QPaintEvent):
         painter = QPainter(self)
         painter.drawRect(self.rect())
         pix = QPixmap("./imgs/ui/background-img.png")  # Change to the relative path of your own image
         painter.drawPixmap(self.rect(), pix)
 
+
+    # app close event
     def closeEvent(self, a0: QCloseEvent):
         self.stopBackgroundSound()
 
@@ -171,44 +150,12 @@ class AppForm(QtWidgets.QWidget):
 #        playsound('musics/button_hover.wav')
 
 
-# def testFunction():
-#     print("test!")
-#     CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-#     filename = os.path.join(CURRENT_DIR, "bgm.mp3")
-#
-#     player = PyQt5.QtMultimedia.QMediaPlayer()
-#     playlist = PyQt5.QtMultimedia.QMediaPlaylist(player)
-#
-#     urls = QUrl.fromLocalFile(filename)
-#     playlist.addMedia(QMediaContent(urls))
-#     playlist.setPlaybackMode(PyQt5.QtMultimedia.QMediaPlaylist.Loop)
-#
-#     player.setPlaylist(playlist)
-#     player.play()
-#     print("play!")
-
 
 # python main code(실행 메인 스크립트)
 if __name__ == '__main__':
 
     # QApplication 함수 호출을 통해 app 생성 (모든 QT Application은 어플리케이션 객체를 생성해야한다. doc 참조.
     app = QtWidgets.QApplication(sys.argv)
-    # testFunction()
-    #도대체 왜이러나!!
-    # CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-    # filename = os.path.join(CURRENT_DIR, "bgm.mp3")
-    #
-    # player = QtMultimedia.QMediaPlayer()
-    # playlist = QtMultimedia.QMediaPlaylist(player)
-    #
-    # urls = QUrl.fromLocalFile(filename)
-    # playlist.addMedia(QMediaContent(urls))
-    # playlist.setPlaybackMode(QtMultimedia.QMediaPlaylist.Loop)
-    #
-    # player.setPlaylist(playlist)
-    # player.play()
-
-    # playBackgroundSound()
 
     # AppForm 인스턴스 생성 및 창 실행
 
