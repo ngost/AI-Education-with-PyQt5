@@ -3,25 +3,28 @@ import wx
 import PyQt5
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt,QEvent
+from PyQt5.QtCore import Qt,QEvent, QTimeLine
 
 from PyQt5.QtMultimedia import QSound
 from playsound import playsound
 import multiprocessing
-
+import Root.SecondForm as sec
+from Root.FaderStackWidget import *
 
 # App 관련 Class 생성
 class AppForm(QtWidgets.QWidget):
     # 기본 스크린 사이즈
-    sc_width = 1920
-    sc_height = 1080
-    m_process = multiprocessing.Process(target=playsound, args=['musics/space.mp3'])
+
+    # m_process = multiprocessing.Process(target=playsound, args=['musics/space.mp3'])
 
     def playBackgroundSound(self):
-        AppForm.m_process.start()
+        playsound('musics/space.mp3',False)
+
 
     def stopBackgroundSound(self):
-        AppForm.m_process.terminate()
+        print('nothing')
+        #empty
+
 
     # 클래스 중 가장 먼저 실행되는 함수
     def __init__(self):
@@ -43,7 +46,7 @@ class AppForm(QtWidgets.QWidget):
         wxApp = wx.App(False)
         sc_width, sc_height = wx.GetDisplaySize()
         # set Defalut Screen Size - 2. resize app screen size of your desktop screen size (About 1/4 size)
-        self.resize(int(sc_width/2) ,int(sc_height/2))
+
 
         # Quit action
 
@@ -98,26 +101,29 @@ class AppForm(QtWidgets.QWidget):
 
 
         self.setLayout(grid)
-        grid.cellRect(5,5)
-        grid.setColumnStretch(0,1)
-        grid.setColumnStretch(1,1)
-        grid.setColumnStretch(2,1)
+        grid.cellRect(5,3)
 
         grid.setRowStretch(0,1)
         grid.setRowStretch(1,1)
         grid.setRowStretch(2,1)
         grid.setRowStretch(3,1)
+        grid.setRowStretch(4,1)
 
-        grid.addWidget(title_text,0,1)
-        grid.addWidget(copyright_text,5,1)
+        grid.setColumnStretch(0,1)
+        grid.setColumnStretch(1,1)
+        grid.setColumnStretch(2,1)
 
-        grid.addWidget(self.vision_btn,1,1)
-        grid.addWidget(self.qt_practice_btn,2,1)
+
+
+
+        grid.addWidget(title_text,0,0,1,3)
+        grid.addWidget(self.vision_btn,2,1,1,1)
+        grid.addWidget(self.qt_practice_btn,3,1,1,1)
+        grid.addWidget(copyright_text,4,0,1,3)
 
     def vision_btn_function(self):
-        print('qt_practice_btn_function page')
-        reply = QtWidgets.QMessageBox.question(self, 'Message', '준비중입니다 : (',
-                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        stack.setCurrentIndex(stack.currentIndex()+1)
+        print('nothing')
 
 
     def qt_practice_btn_function(self):
@@ -129,7 +135,6 @@ class AppForm(QtWidgets.QWidget):
 
     def paintEvent(self, a0: QPaintEvent):
         painter = QPainter(self)
-        painter.setOpacity(0.7)
         painter.drawRect(self.rect())
         pix = QPixmap("./imgs/ui/background-img.png")  # Change to the relative path of your own image
         painter.drawPixmap(self.rect(), pix)
@@ -152,68 +157,40 @@ class AppForm(QtWidgets.QWidget):
         QSound.play('musics/button_hover.wav')
 #        playsound('musics/button_hover.wav')
 
-class StackedWidget(QtWidgets.QStackedWidget):
 
-    def __init__(self, parent=None):
-        QtWidgets.QStackedWidget.__init__(self, parent)
-
-    def setCurrentIndex(self, index):
-        self.fader_widget = FaderWidget(self.currentWidget(), self.widget(index))
-        QtWidgets.QStackedWidget.setCurrentIndex(self, index)
-
-    def setPage1(self):
-        self.setCurrentIndex(0)
-
-    def setPage2(self):
-        self.setCurrentIndex(1)
-
-class FaderWidget(QtWidgets.QWidget):
-
-    def __init__(self, old_widget, new_widget):
-        QtWidgets.QWidget.__init__(self, new_widget)
-
-        self.old_pixmap = QPixmap(new_widget.size())
-        old_widget.render(self.old_pixmap)
-        self.pixmap_opacity = 1.0
-
-        self.timeline = QTimeLine()
-        self.timeline.valueChanged.connect(self.animate)
-        self.timeline.finished.connect(self.close)
-        self.timeline.setDuration(333)
-        self.timeline.start()
-
-        self.resize(new_widget.size())
-        self.show()
-
-    def paintEvent(self, event):
-        painter = QPainter()
-        painter.begin(self)
-        painter.setOpacity(self.pixmap_opacity)
-        painter.drawPixmap(0, 0, self.old_pixmap)
-        painter.end()
-
-    def animate(self, value):
-        self.pixmap_opacity = 1.0 - value
-        self.repaint()
 
 
 # python main code(실행 메인 스크립트)
 if __name__ == '__main__':
 
+    testest = 'test'
+    sc_width = 1920
+    sc_height = 1080
+    sc_width = int(sc_width / 2)
+    sc_height = int(sc_height / 2)
+
     # QApplication 함수 호출을 통해 app 생성 (모든 QT Application은 어플리케이션 객체를 생성해야한다. doc 참조.
     app = QtWidgets.QApplication(sys.argv)
 
     # AppForm 인스턴스 생성 및 창 실행
-
-    form = AppForm()
-    form.paintEngine()
-    form.show()
-
     stack = StackedWidget()
-    stack.addWidget(form)
+    stack.resize(sc_width,sc_height)
+
+    first_form = AppForm()
+    second_form = sec.Second_Form()
+    second_form.init_StackWidget(stack)
+    # second_form.stack = stack
+
+    # form.paintEngine()
+    # form.show()
 
 
-    form.playBackgroundSound()
+    stack.addWidget(first_form)
+    stack.addWidget(second_form)
+    first_form.playBackgroundSound()
+    stack.show()
+
+
     # App 호출, pyqt4와의 호환성을 위해 sys.exit(app.exec_())로 쓰기도
 
     sys.exit(app.exec_())
