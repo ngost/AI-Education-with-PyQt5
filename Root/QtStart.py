@@ -8,6 +8,8 @@ from PyQt5.QtCore import Qt,QEvent
 from PyQt5.QtMultimedia import QSound
 from playsound import playsound
 import multiprocessing
+
+
 # App 관련 Class 생성
 class AppForm(QtWidgets.QWidget):
     # 기본 스크린 사이즈
@@ -127,6 +129,7 @@ class AppForm(QtWidgets.QWidget):
 
     def paintEvent(self, a0: QPaintEvent):
         painter = QPainter(self)
+        painter.setOpacity(0.7)
         painter.drawRect(self.rect())
         pix = QPixmap("./imgs/ui/background-img.png")  # Change to the relative path of your own image
         painter.drawPixmap(self.rect(), pix)
@@ -149,6 +152,49 @@ class AppForm(QtWidgets.QWidget):
         QSound.play('musics/button_hover.wav')
 #        playsound('musics/button_hover.wav')
 
+class StackedWidget(QtWidgets.QStackedWidget):
+
+    def __init__(self, parent=None):
+        QtWidgets.QStackedWidget.__init__(self, parent)
+
+    def setCurrentIndex(self, index):
+        self.fader_widget = FaderWidget(self.currentWidget(), self.widget(index))
+        QtWidgets.QStackedWidget.setCurrentIndex(self, index)
+
+    def setPage1(self):
+        self.setCurrentIndex(0)
+
+    def setPage2(self):
+        self.setCurrentIndex(1)
+
+class FaderWidget(QtWidgets.QWidget):
+
+    def __init__(self, old_widget, new_widget):
+        QtWidgets.QWidget.__init__(self, new_widget)
+
+        self.old_pixmap = QPixmap(new_widget.size())
+        old_widget.render(self.old_pixmap)
+        self.pixmap_opacity = 1.0
+
+        self.timeline = QTimeLine()
+        self.timeline.valueChanged.connect(self.animate)
+        self.timeline.finished.connect(self.close)
+        self.timeline.setDuration(333)
+        self.timeline.start()
+
+        self.resize(new_widget.size())
+        self.show()
+
+    def paintEvent(self, event):
+        painter = QPainter()
+        painter.begin(self)
+        painter.setOpacity(self.pixmap_opacity)
+        painter.drawPixmap(0, 0, self.old_pixmap)
+        painter.end()
+
+    def animate(self, value):
+        self.pixmap_opacity = 1.0 - value
+        self.repaint()
 
 
 # python main code(실행 메인 스크립트)
@@ -162,6 +208,10 @@ if __name__ == '__main__':
     form = AppForm()
     form.paintEngine()
     form.show()
+
+    stack = StackedWidget()
+    stack.addWidget(form)
+
 
     form.playBackgroundSound()
     # App 호출, pyqt4와의 호환성을 위해 sys.exit(app.exec_())로 쓰기도
