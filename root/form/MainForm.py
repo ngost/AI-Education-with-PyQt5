@@ -1,28 +1,24 @@
 import sys, os
 import wx
-import PyQt5
-from PyQt5 import QtWidgets
-from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt,QEvent, QTimeLine
 
 from PyQt5.QtMultimedia import QSound
 from playsound import playsound
-import multiprocessing
-import Root.SecondForm as sec
-from Root.FaderStackWidget import *
-
+import root.form.SecondForm as sec
+from root.util.FaderStackWidget import *
+from pathlib import Path
 # App 관련 Class 생성
 class AppForm(QtWidgets.QWidget):
     # 기본 스크린 사이즈
+    root_path = Path(os.path.abspath('')).parent
 
     # m_process = multiprocessing.Process(target=playsound, args=['musics/space.mp3'])
 
     def playBackgroundSound(self):
-        playsound('musics/space.mp3',False)
+        playsound(str(self.root_path)+'/musics/space.mp3',False)
 
 
     def stopBackgroundSound(self):
-        print('nothing')
+        pass
         #empty
 
 
@@ -123,7 +119,6 @@ class AppForm(QtWidgets.QWidget):
 
     def vision_btn_function(self):
         stack.setCurrentIndex(stack.currentIndex()+1)
-        print('nothing')
 
 
     def qt_practice_btn_function(self):
@@ -136,7 +131,7 @@ class AppForm(QtWidgets.QWidget):
     def paintEvent(self, a0: QPaintEvent):
         painter = QPainter(self)
         painter.drawRect(self.rect())
-        pix = QPixmap("./imgs/ui/background-img.png")  # Change to the relative path of your own image
+        pix = QPixmap(str(self.root_path)+"/imgs/ui/background-img.png")  # Change to the relative path of your own image
         painter.drawPixmap(self.rect(), pix)
 
 
@@ -154,7 +149,7 @@ class AppForm(QtWidgets.QWidget):
         return super(AppForm, self).eventFilter(obj, event)
 
     def onHovered(self):
-        QSound.play('musics/button_hover.wav')
+        QSound.play(str(self.root_path)+'/musics/button_hover.wav')
 #        playsound('musics/button_hover.wav')
 
 
@@ -189,7 +184,6 @@ if __name__ == '__main__':
     stack.addWidget(second_form)
     first_form.playBackgroundSound()
     stack.show()
-
 
     # App 호출, pyqt4와의 호환성을 위해 sys.exit(app.exec_())로 쓰기도
 

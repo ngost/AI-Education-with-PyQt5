@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/ijin-yeong/Desktop/project_list_ui.ui'
+# form implementation generated from reading ui file '/Users/ijin-yeong/Desktop/project_list_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.0
 #
@@ -12,13 +12,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import *
 import sys, os
 
+import root.form.MovieReviewSentiment as movieSenti
+
 from pathlib import Path
 
 class Second_Form(QtWidgets.QWidget):
 
     sc_width = 1920
     sc_height = 1080
-    root_path = Path(os.path.abspath(''))
+    root_path = Path(os.path.abspath('')).parent
 
     app_font = QFont('Arial',24)
     stack = None
@@ -29,20 +31,18 @@ class Second_Form(QtWidgets.QWidget):
         # stack = St.StackedWidget()
 
 
-    def init_StackWidget(self, temp):
-        self.stack = temp
+    def init_StackWidget(self, para):
+        self.stack = para
 
     def paintEvent(self, a0: QPaintEvent):
         painter = QtGui.QPainter(self)
-        painter.setOpacity(0.7)
+        painter.setOpacity(0.5)
         painter.drawRect(self.rect())
 
 
         pix = QtGui.QPixmap()  # Change to the relative path of your own image
         img_path = str(Second_Form.root_path) + '/imgs/ui/background-img.png'
         pix.load(img_path)
-
-
 
         painter.drawPixmap(self.rect(), pix)
 
@@ -56,7 +56,7 @@ class Second_Form(QtWidgets.QWidget):
         self.title_label.setText('Project List')
         self.title_label.setAlignment(QtCore.Qt.AlignCenter)
         self.title_label.setFont(Second_Form.app_font)
-        self.title_label.setStyleSheet('color : white')
+        self.title_label.setStyleSheet('color : black')
 
         self.back_btn = QtWidgets.QPushButton()
         self.back_btn.setText('Back to Home')
@@ -67,7 +67,7 @@ class Second_Form(QtWidgets.QWidget):
         self.movie_classify_btn.setText('Movie Review Classify')
         self.movie_classify_btn.setMaximumHeight(30)
 
-        self.movie_classify_btn.clicked.connect(self.dialog_iam_ready)
+        self.movie_classify_btn.clicked.connect(self.movie_review_ssentiment_btn)
 
         self.grid_layout = QtWidgets.QGridLayout()
         #그리드 레이아웃 크기 지정
@@ -101,6 +101,12 @@ class Second_Form(QtWidgets.QWidget):
     def dialog_iam_ready(self):
         reply = QtWidgets.QMessageBox.question(self, 'Message', '준비중입니다 : (',
                                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+
+    def movie_review_ssentiment_btn(self):
+        review_form = movieSenti.MovieReviewForm()
+        review_form.init_StackWidget(self.stack)
+        self.stack.addWidget(review_form)
+        self.stack.setCurrentIndex(self.stack.currentIndex()+1)
 
 if __name__ == "__main__":
 
