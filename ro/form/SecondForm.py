@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import *
 import sys, os
 
-import root.form.MovieReviewSentiment as movieSenti
+import ro.form.MovieReviewSentiment as movieSenti
 
 from pathlib import Path
 

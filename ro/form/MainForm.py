@@ -3,8 +3,8 @@ import wx
 
 from PyQt5.QtMultimedia import QSound
 from playsound import playsound
-import root.form.SecondForm as sec
-from root.util.FaderStackWidget import *
+import ro.form.SecondForm as sec
+from ro.util.FaderStackWidget import *
 from pathlib import Path
 # App 관련 Class 생성
 class AppForm(QtWidgets.QWidget):
