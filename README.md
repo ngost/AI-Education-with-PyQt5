@@ -4,6 +4,9 @@
 
 This project is ai projects for education. Programmed based pyQt5 frameworks.
 
+# Main Project
+- Sentiment Analysis of movie review
+
 # Using Module
 
 - playsound
