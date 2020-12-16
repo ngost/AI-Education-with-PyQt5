@@ -7,7 +7,8 @@ This project is ai projects for education. Programmed based pyQt5 frameworks.
 # Using Module
 
 - playsound
-- pyqt5 (5.12.0
+- pyqt5 (5.15.0)
+- pydesign
 - tensorflow
 - numpy
 - googletrans
