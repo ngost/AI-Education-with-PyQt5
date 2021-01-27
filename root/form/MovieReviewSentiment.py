@@ -9,6 +9,7 @@ import numpy as np
 from tensorflow import keras
 from googletrans import Translator
 import json
+from httpcore import ConnectError
 
 class MovieReviewForm(QtWidgets.QWidget):
 
@@ -47,6 +48,7 @@ class MovieReviewForm(QtWidgets.QWidget):
 
         self.input_text_box = QtWidgets.QLineEdit()
         self.input_text_box.setMaximumHeight(50)
+
         # self.input_text_box.
         self.input_text_box.setFont(QFont('Arial',15))
         self.input_text_box.setAlignment(QtCore.Qt.AlignCenter)
@@ -132,12 +134,18 @@ class MovieReviewForm(QtWidgets.QWidget):
 
 
     def decode_review(self,words):
-        trans = Translator()
-        result = trans.translate(words, dest='en')
-        words = result.text
-        words = words.replace('.', '')
-        words = words.split(' ')
-        # print(words)
+        try:
+            trans = Translator()
+            result = trans.translate(words, dest='en')
+            words = result.text
+            words = words.replace('.', '')
+            words = words.split(' ')
+        except ConnectError as con_e:
+            print(con_e)
+            self.result_text.setStyleSheet('color : #ff7f00')
+            self.result_text.setText("Please connecting the internet :(")
+            return
+
 
         e_words = list()
         e_words.append(1)

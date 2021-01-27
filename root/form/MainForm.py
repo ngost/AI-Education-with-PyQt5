@@ -6,6 +6,8 @@ from playsound import playsound
 import root.form.SecondForm as sec
 from root.util.FaderStackWidget import *
 from pathlib import Path
+
+
 # App 관련 Class 생성
 class AppForm(QtWidgets.QWidget):
     # 기본 스크린 사이즈
@@ -14,7 +16,8 @@ class AppForm(QtWidgets.QWidget):
     # m_process = multiprocessing.Process(target=playsound, args=['musics/space.mp3'])
 
     def playBackgroundSound(self):
-        playsound(str(self.root_path)+'/musics/space.mp3',False)
+        # playsound(str(self.root_path)+'/musics/space.mp3',False)
+        pass
 
 
     def stopBackgroundSound(self):
@@ -32,15 +35,15 @@ class AppForm(QtWidgets.QWidget):
     def init_ui(self):
         #set title
 
-        self.setWindowTitle("Ai Application Demo with pyQt5")
+        self.setWindowTitle("Ai Application Demo")
 
-        if os.name == 'nt':
-            self.setWindowIcon(QIcon('app_icon.png'))
+        # if os.name == 'nt':
+        #     self.setWindowIcon(QIcon('app_icon.png'))
 
         # set Defalut Screen Size
         #set Defalut Screen Size - 1. get Screen Size on each platform from wxPython
-        wxApp = wx.App(False)
-        sc_width, sc_height = wx.GetDisplaySize()
+        # wxApp = wx.App(False)
+        # sc_width, sc_height = wx.GetDisplaySize()
         # set Defalut Screen Size - 2. resize app screen size of your desktop screen size (About 1/4 size)
 
 
@@ -136,8 +139,8 @@ class AppForm(QtWidgets.QWidget):
 
 
     # app close event
-    def closeEvent(self, a0: QCloseEvent):
-        self.stopBackgroundSound()
+    # def closeEvent(self, a0: QCloseEvent):
+    #     self.stopBackgroundSound()
 
     def eventFilter(self, obj, event):
 
@@ -158,7 +161,6 @@ class AppForm(QtWidgets.QWidget):
 # python main code(실행 메인 스크립트)
 if __name__ == '__main__':
 
-    testest = 'test'
     sc_width = 1920
     sc_height = 1080
     sc_width = int(sc_width / 2)
@@ -166,23 +168,19 @@ if __name__ == '__main__':
 
     # QApplication 함수 호출을 통해 app 생성 (모든 QT Application은 어플리케이션 객체를 생성해야한다. doc 참조.
     app = QtWidgets.QApplication(sys.argv)
+    app.setWindowIcon(QIcon(str(AppForm.root_path)+'/imgs/app_icon.png'))
 
     # AppForm 인스턴스 생성 및 창 실행
     stack = StackedWidget()
     stack.resize(sc_width,sc_height)
 
-    first_form = AppForm()
+    main_app_form = AppForm()
     second_form = sec.Second_Form()
     second_form.init_StackWidget(stack)
-    # second_form.stack = stack
 
-    # form.paintEngine()
-    # form.show()
-
-
-    stack.addWidget(first_form)
+    stack.addWidget(main_app_form)
     stack.addWidget(second_form)
-    first_form.playBackgroundSound()
+    main_app_form.playBackgroundSound()
     stack.show()
 
     # App 호출, pyqt4와의 호환성을 위해 sys.exit(app.exec_())로 쓰기도

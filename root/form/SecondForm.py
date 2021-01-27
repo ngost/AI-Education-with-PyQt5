@@ -13,6 +13,7 @@ from PyQt5.QtGui import *
 import sys, os
 
 import root.form.MovieReviewSentiment as movieSenti
+import root.form.MaskDetectorForm as mask_detector_form
 
 from pathlib import Path
 
@@ -63,11 +64,18 @@ class Second_Form(QtWidgets.QWidget):
         self.back_btn.setMaximumHeight(50)
         self.back_btn.clicked.connect(self.back_btn_function)
 
+        # movie _ classify
         self.movie_classify_btn = QtWidgets.QPushButton()
         self.movie_classify_btn.setText('Movie Review Classify')
         self.movie_classify_btn.setMaximumHeight(30)
+        self.movie_classify_btn.clicked.connect(self.click_movie_review_sentiment_btn)
 
-        self.movie_classify_btn.clicked.connect(self.movie_review_ssentiment_btn)
+        # mask detector
+        self.mask_detector_btn = QtWidgets.QPushButton()
+        self.mask_detector_btn.setText('Mask Detector')
+        self.mask_detector_btn.setMaximumHeight(30)
+        self.mask_detector_btn.clicked.connect(self.click_mask_detector_btn)
+
 
         self.grid_layout = QtWidgets.QGridLayout()
         #그리드 레이아웃 크기 지정
@@ -86,13 +94,11 @@ class Second_Form(QtWidgets.QWidget):
 
         self.setLayout(self.grid_layout)
 
-        #3,4 파라미터는 행은 1개먹고, 열은 2개먹고
+        #3,4 파라미터 뜻은 행은 n개먹고, 열은 n개먹고
         self.grid_layout.addWidget(self.title_label,0,0,1,3)
         self.grid_layout.addWidget(self.movie_classify_btn,2,1,1,1)
+        self.grid_layout.addWidget(self.mask_detector_btn,3,1,1,1)
         self.grid_layout.addWidget(self.back_btn,4,1,1,1)
-
-
-
 
     #
     def back_btn_function(self):
@@ -102,11 +108,19 @@ class Second_Form(QtWidgets.QWidget):
         reply = QtWidgets.QMessageBox.question(self, 'Message', '준비중입니다 : (',
                                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
-    def movie_review_ssentiment_btn(self):
+    def click_movie_review_sentiment_btn(self):
         review_form = movieSenti.MovieReviewForm()
         review_form.init_StackWidget(self.stack)
         self.stack.addWidget(review_form)
         self.stack.setCurrentIndex(self.stack.currentIndex()+1)
+
+#ㅁㅏ스크 디텍터 버튼 클릭시 화면이
+    def click_mask_detector_btn(self):
+        review_form = mask_detector_form.MaskDetectorForm()
+        review_form.init_StackWidget(self.stack)
+        self.stack.addWidget(review_form)
+        self.stack.setCurrentIndex(self.stack.currentIndex()+1)
+
 
 if __name__ == "__main__":
 
